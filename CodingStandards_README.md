@@ -41,5 +41,28 @@ Coding convention for Listners:
   Git
       Branches should be named using camelCase.
         Example: testBranch
-  
+        
+      Git Flow:
+        (1) Go to master branch (git checkout master)
+        (2) Pull the latest changes (git pull)
+        (3) Create new branch (git checkout -b newBranchName)
+        (4) Make your changes
+        (5) Add your changes to your branch (git add .)
+        (6) Commit your changes (git commit -m "meaningful message")
+        (7) push your changes to your branch (git push)
+        If you have finished a feature
+            Repeat steps (1) & (2)
+            (8) Post into the teams chat let people know you are about to perform a pull request
+            (9) Go back to your own branch (git checkout branchName)
+            (10) Rebase off the master branch (git rebase -i master)
+            (11) Go to git hub
+            (12) Send a pull request (should be at the top of the screen)
+            (13) Post a message to the teams letting people know you sent the pull request
+            (14) When the pull request has been fully completed post again to let everyone know.
+        else
+            (8) Get back to work :)
+     
+     If you finish a "coding" session push your changes to your branch (steps 5, 6 & 7)
+     
+
 This content was taken from https://android.jlelse.eu/java-coding-standards-ee1687a82ec2 for reference if you need more clarification on any of the points.
