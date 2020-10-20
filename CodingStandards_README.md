@@ -37,4 +37,9 @@ Coding convention for Listners:
   To unregister a Listner method name should prefixed with remove
   Eg: public void removeMyAccountListner( MyActionListner);
   
+  
+  Git
+      Branches should be named using camelCase.
+        Example: testBranch
+  
 This content was taken from https://android.jlelse.eu/java-coding-standards-ee1687a82ec2 for reference if you need more clarification on any of the points.
