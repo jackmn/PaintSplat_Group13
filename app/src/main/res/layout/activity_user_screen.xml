@@ -1,0 +1,41 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/untitled_1">
+
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="218dp"
+        android:layout_height="143dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginStart="96dp"
+        android:layout_marginLeft="96dp"
+        android:layout_marginTop="491dp"
+        android:layout_marginEnd="96dp"
+        android:layout_marginRight="97dp"
+        android:background="@android:color/transparent" />
+
+    <EditText
+        android:id="@+id/edittext1"
+        android:layout_width="222dp"
+        android:layout_height="71dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginStart="93dp"
+        android:layout_marginLeft="93dp"
+        android:layout_marginTop="300dp"
+        android:layout_marginEnd="96dp"
+        android:layout_marginRight="99dp"
+        android:background="@android:color/transparent"
+        android:hint="Add Username"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white" />
+
+</RelativeLayout>
