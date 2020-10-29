@@ -10,9 +10,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
         <activity android:name=".UserScreen"></activity>
-        <activity android:name=".gameScreen" />
-        <activity android:name=".MainActivity" />
-        <activity android:name=".HomeScreen">
+        <activity android:name=".HomeScreen" />
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
