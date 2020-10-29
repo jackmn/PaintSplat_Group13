@@ -43,7 +43,7 @@ public class PlayerLobbies extends AppCompatActivity {
 
         database = FirebaseDatabase.getInstance();
 
-        //get the player name and assign his rrom to thr player name
+        //get the player name and assign his room to thr player name
         SharedPreferences preferences = getSharedPreferences("PREFS", 0);
         playerName = preferences.getString("playerName", "");
         roomName = playerName;
@@ -103,8 +103,8 @@ public class PlayerLobbies extends AppCompatActivity {
     }
 
     private void addRoomsEventListener(){
-        roomRef = database.getReference("rooms");
-        roomRef.addValueEventListener(new ValueEventListener() {
+        roomsRef = database.getReference("rooms");
+        roomsRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 //show list of rooms

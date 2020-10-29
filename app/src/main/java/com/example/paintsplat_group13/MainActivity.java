@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         button = findViewById(R.id.poke);
-        button.setEnabled(false);
+        //button.setEnabled(false);
         database = FirebaseDatabase.getInstance();
         SharedPreferences preferences = getSharedPreferences("PREFS", 0);
         playerName = preferences.getString("playerName", "");
@@ -43,14 +43,14 @@ public class MainActivity extends AppCompatActivity {
             if (roomName.equals(playerName)){
                 role = "host";
             } else{
-                role = "quest";
+                role = "guest";
             }
         }
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                button.setEnabled(false);
+                //button.setEnabled(false);
                 message = role + ":Poked!";
                 messageRef.setValue(message);
             }
@@ -68,20 +68,20 @@ public class MainActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (role.equals("host")){
                     if (dataSnapshot.getValue(String.class).contains("guest:")){
-                        button.setEnabled(true);
+                        //button.setEnabled(true);
                         Toast.makeText(MainActivity.this, "" +
                                 dataSnapshot.getValue(String.class).replace("guest:", ""), Toast.LENGTH_SHORT).show();
                     }
                 } else{
                     if (dataSnapshot.getValue(String.class).contains("host:")){
-                        button.setEnabled(true);
+                        //button.setEnabled(true);
                         Toast.makeText(MainActivity.this, "" +
-                                dataSnapshot.getValue(String.class).replace("guest:", ""), Toast.LENGTH_SHORT).show();
+                                dataSnapshot.getValue(String.class).replace("host:", ""), Toast.LENGTH_SHORT).show();
                     }
                 }
             }
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+            public void onCancelled(@NonNull DatabaseError databaseError) {
                 // error -retry
                 messageRef.setValue(message);
             }

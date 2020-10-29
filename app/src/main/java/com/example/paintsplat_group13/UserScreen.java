@@ -34,10 +34,10 @@ public class UserScreen extends AppCompatActivity {
         setContentView(R.layout.activity_user_screen);
 
         editText = findViewById(R.id.edittext1);
-        button = findViewById((R.id.button1));
+        button = findViewById(R.id.button1);
 
         database = FirebaseDatabase.getInstance();
-        // Check if the playyer exists and get reference
+        // Check if the player exists and get reference
         SharedPreferences preferences = getSharedPreferences("PREFS", 0);
         playerName = preferences.getString("playerName", "");
         if(!playerName.equals("")){
@@ -52,8 +52,8 @@ public class UserScreen extends AppCompatActivity {
                 playerName = editText.getText().toString();
                 editText.setText("");
                 if(!playerName.equals("")) {
-                    button.setText(("Logging In"));
-                    button.setEnabled((false));
+                    button.setText("Logging In");
+                    button.setEnabled(false);
                     playerRef = database.getReference("players/" + playerName);
                     addEventListener();
                     playerRef.setValue("");
@@ -69,9 +69,9 @@ public class UserScreen extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 //success - continue to the next screen after saving the player name
                 if(!playerName.equals("")) {
-                    SharedPreferences  preferences = getSharedPreferences("PREFS", 0);
+                    SharedPreferences preferences = getSharedPreferences("PREFS", 0);
                     SharedPreferences.Editor editor = preferences.edit();
-                    editor.putString("PlayerName", playerName);
+                    editor.putString("playerName", playerName);
                     editor.apply();
                     startActivity(new Intent(getApplicationContext(), PlayerLobbies.class));
                     finish();
