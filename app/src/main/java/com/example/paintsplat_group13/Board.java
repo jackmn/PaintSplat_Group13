@@ -27,6 +27,8 @@ public class Board extends AppCompatActivity {
     private Handler handler= new Handler();
     private Timer timer= new Timer();
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,5 +70,8 @@ public class Board extends AppCompatActivity {
         }
         board.setX(boardX);
         board.setY(boardY);
+    }
+
+    public void invalidate() {
     }
 }

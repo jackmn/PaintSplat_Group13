@@ -13,7 +13,7 @@ public class splash extends View {
     private int xVec, yVec;
     private int ScreenHeight;
     private int ScreenWidth;
-    private Paint screen;
+    public Paint screen;
 
     public splash(Context context, float x, float y) {
         super(context);
@@ -22,10 +22,6 @@ public class splash extends View {
         x= this.x;
         y=this.y;
     }
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-        canvas.drawRect(x,y,x+this.w,y+this.h, screen);
-    }
+
 
 }
