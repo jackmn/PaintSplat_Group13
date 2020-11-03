@@ -15,6 +15,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class MainActivity extends AppCompatActivity {
 
     Button button;
@@ -23,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     String roomName= "";
     String role = "";
     String message = "";
-
+    int count = 0;
     FirebaseDatabase database;
     DatabaseReference messageRef;
 
@@ -51,14 +54,20 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //button.setEnabled(false);
-                message = role + ":Poked!";
-                messageRef.setValue(message);
+                messageRef = database.getReference("rooms/" + roomName + "/" + playerName + "/moveX" + count);
+                //message = role + move; //every other one
+                messageRef.setValue(1);
+                messageRef = database.getReference("rooms/" + roomName + "/" + playerName + "/moveY" + count );
+                //message = role + move; //every other one
+                messageRef.setValue(2);
+                count++;
             }
         });
         //listen for incoming messages
         messageRef = database.getReference("rooms/" + roomName + "/message");
-        message = role + ":Poked!";
+        message = role + ": Setting up game!"; // initial
         messageRef.setValue(message);
+
         addRoomEventListener();
     }
 
@@ -87,4 +96,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+//    public Object setObject(int number1, int number2, int number3){
+//        Object temp: {
+//                int numbera = number1,
+//        }
+//    }
 }
