@@ -24,7 +24,7 @@ public class gameScreen extends AppCompatActivity {
 
             @Override
             public void run() {
-//                paintCanvas.moveRect();
+               paintCanvas.moveRect();
 
                 paintCanvas.invalidate();   //Calls screen update
             }

@@ -14,10 +14,12 @@ public class PaintCanvas extends View {
     private final int boundary = 150;
     private final Context context;
     private int x, y;
+    private float xs, ys;
     private int xVec, yVec;
     private int ScreenHeight;
     private int ScreenWidth;
     private Paint screen;
+    private Paint spot;
     private splash sh;
     private boolean b;
 
@@ -26,6 +28,8 @@ public class PaintCanvas extends View {
         this.context= context;
         screen = new Paint();
         screen.setColor(Color.GRAY);
+        spot = new Paint();
+        spot.setColor(Color.GREEN);
         x = y = 200;
         xVec = 2;   //Speed of change for x coordinate
         yVec = 10;  //Speed of change for y coordinate
@@ -42,8 +46,9 @@ public class PaintCanvas extends View {
         super.onDraw(canvas);
         canvas.drawRect(x,y,x+width,y+width, screen);
         if (b==true){
-            canvas.drawColor(Color.GREEN);
-            canvas.drawCircle(x,y,1,screen);
+            //canvas.drawColor(Color.GREEN);
+            super.onDraw(canvas);
+            canvas.drawRect(xs,ys,xs+50,ys+50, spot);
         }
     }
 
@@ -59,17 +64,21 @@ public class PaintCanvas extends View {
         //Setting new target position
         x = x + xVec;
         y = y + yVec;
+        xs= xs+ xVec;
+        ys= ys+ yVec;
     }
 
-    //public boolean isOnBoard(float x2, float y2, float x, float y) {
-     //   return x2 > x && x2 < x + width && y2 > y && y2 < y + height;
-    //}
+    public boolean isOnBoard(float x2, float y2, float x, float y) {
+        return x2 > x && x2 < x + width && y2 > y && y2 < y + height;
+    }
     @Override
 
     public boolean onTouchEvent(MotionEvent event){
-           // if(isOnBoard(event.getX(),event.getY(),0,0)){
+            if(isOnBoard(event.getX(),event.getY(),x,y)){
             b= true;
-           // }
+            xs=event.getX();
+            ys=event.getY();
+            }
         return true;
     }
 
