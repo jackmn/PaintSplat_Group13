@@ -4,8 +4,27 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import static java.lang.Math.abs;
+
+class PaintSplat{
+
+    public float x;
+    public float y;
+    public PaintSplat(float x_x, float y_y){
+        this.x = x_x;
+        this.y = y_y;
+    };
+}
 
 public class PaintCanvas extends View {
 
@@ -14,14 +33,15 @@ public class PaintCanvas extends View {
     private final int boundary = 150;
     private final Context context;
     private int x, y;
-    private float xs, ys;
     private int xVec, yVec;
     private int ScreenHeight;
     private int ScreenWidth;
     private Paint screen;
     private Paint spot;
     private splash sh;
-    private boolean b;
+    private boolean CoolDownActive;
+    private List <PaintSplat>splat;
+    private int previousSize;
 
     public PaintCanvas(Context context) {
         super(context);
@@ -32,10 +52,11 @@ public class PaintCanvas extends View {
         spot.setColor(Color.GREEN);
         x = y = 200;
         xVec = 2;   //Speed of change for x coordinate
-        yVec = 10;  //Speed of change for y coordinate
+        yVec = 2;  //Speed of change for y coordinate
+        previousSize = 0;
         ScreenWidth= context.getResources().getDisplayMetrics().widthPixels;
         ScreenHeight = context.getResources().getDisplayMetrics().heightPixels;
-
+        splat = new ArrayList<PaintSplat>();
     }
 
 
@@ -45,10 +66,24 @@ public class PaintCanvas extends View {
         canvas.drawColor(Color.BLUE);
         super.onDraw(canvas);
         canvas.drawRect(x,y,x+width,y+width, screen);
-        if (b==true){
+        for (int i=0; i<splat.size(); i++){
             //canvas.drawColor(Color.GREEN);
-            canvas.drawRect(xs,ys,xs+50,ys+50, spot);
+            canvas.drawRect(splat.get(i).x,splat.get(i).y,splat.get(i).x+50,splat.get(i).y+50, spot);
         }
+        SpeedUpdate();
+    }
+
+    public void SpeedUpdate(){
+
+        if(splat.size() % 3 == 0 && splat.size()!=previousSize){
+            Random rand = new Random();
+            previousSize = splat.size();
+            xVec = xVec * 2;
+            yVec = yVec * 2;
+        }
+        System.out.println(previousSize);
+        System.out.println(xVec);
+
     }
 
     public void moveRect() {
@@ -63,8 +98,12 @@ public class PaintCanvas extends View {
         //Setting new target position
         x = x + xVec;
         y = y + yVec;
-        xs= xs+ xVec;
-        ys= ys+ yVec;
+
+        for (int i=0; i<splat.size(); i++){
+            //canvas.drawColor(Color.GREEN);
+            splat.get(i).x = splat.get(i).x + xVec;
+            splat.get(i).y = splat.get(i).y + yVec;
+        }
     }
 
     public boolean isOnBoard(float x2, float y2, float x, float y) {
@@ -73,11 +112,26 @@ public class PaintCanvas extends View {
     @Override
 
     public boolean onTouchEvent(MotionEvent event){
-            if(isOnBoard(event.getX(),event.getY(),x,y)){
-            b= true;
-            xs=event.getX();
-            ys=event.getY();
+
+        if(!CoolDownActive) {
+
+            if (isOnBoard(event.getX(), event.getY(), x, y)) {
+                CoolDownActive = true;
+
+                splat.add(new PaintSplat(event.getX(), event.getY()));
+                System.out.println(splat);
+
+                final Timer CoolDownTimer = new Timer();  //Starts game timer
+                CoolDownTimer.schedule(new TimerTask() {
+
+                    @Override
+                    public void run() {
+                        CoolDownActive = false;
+                    }
+                }, 1000);
+
             }
+        }
         return true;
     }
 
