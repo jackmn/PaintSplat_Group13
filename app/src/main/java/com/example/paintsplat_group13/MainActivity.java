@@ -76,16 +76,17 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (role.equals("host")){
-                    if (dataSnapshot.getValue(String.class).contains("guest:")){
+                    //if (dataSnapshot.getValue(String.class).contains("X")){
+                    if (dataSnapshot.getKey().contains("X")){
                         //button.setEnabled(true);
                         Toast.makeText(MainActivity.this, "" +
-                                dataSnapshot.getValue(String.class).replace("guest:", ""), Toast.LENGTH_SHORT).show();
+                                dataSnapshot.getValue(String.class), Toast.LENGTH_SHORT).show();
                     }
                 } else{
-                    if (dataSnapshot.getValue(String.class).contains("host:")){
+                    if (dataSnapshot.getValue(String.class).contains("Y")){
                         //button.setEnabled(true);
                         Toast.makeText(MainActivity.this, "" +
-                                dataSnapshot.getValue(String.class).replace("host:", ""), Toast.LENGTH_SHORT).show();
+                                dataSnapshot.getValue(String.class).replace("host:", "Matthew"), Toast.LENGTH_SHORT).show();
                     }
                 }
             }
