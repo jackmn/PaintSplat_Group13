@@ -47,7 +47,6 @@ public class PaintCanvas extends View {
         canvas.drawRect(x,y,x+width,y+width, screen);
         if (b==true){
             //canvas.drawColor(Color.GREEN);
-            super.onDraw(canvas);
             canvas.drawRect(xs,ys,xs+50,ys+50, spot);
         }
     }
