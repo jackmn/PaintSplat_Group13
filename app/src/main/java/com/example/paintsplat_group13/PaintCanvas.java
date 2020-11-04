@@ -14,7 +14,10 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static android.graphics.Color.GREEN;
 import static java.lang.Math.abs;
+import static java.lang.Math.pow;
+import static java.lang.Math.sqrt;
 
 class PaintSplat{
 
@@ -28,8 +31,8 @@ class PaintSplat{
 
 public class PaintCanvas extends View {
 
-    private final int height = 500;
-    private final int width = 500;
+    private final int height = 700;
+    private final int width = 900;
     private final int boundary = 150;
     private final Context context;
     private int x, y;
@@ -42,6 +45,8 @@ public class PaintCanvas extends View {
     private boolean CoolDownActive;
     private List <PaintSplat>splat;
     private int previousSize;
+    private boolean isOverlapping = false;
+    private int splatRadius = 50;
 
     public PaintCanvas(Context context) {
         super(context);
@@ -49,7 +54,7 @@ public class PaintCanvas extends View {
         screen = new Paint();
         screen.setColor(Color.GRAY);
         spot = new Paint();
-        spot.setColor(Color.GREEN);
+        spot.setColor(GREEN);
         x = y = 200;
         xVec = 2;   //Speed of change for x coordinate
         yVec = 2;  //Speed of change for y coordinate
@@ -63,14 +68,26 @@ public class PaintCanvas extends View {
     @Override
     protected void onDraw(Canvas canvas) {
 
+        boolean temp = 1 == 1?true:false;
         canvas.drawColor(Color.BLUE);
         super.onDraw(canvas);
-        canvas.drawRect(x,y,x+width,y+width, screen);
+        canvas.drawRect(x,y,x+width, y+height,screen);
         for (int i=0; i<splat.size(); i++){
-            //canvas.drawColor(Color.GREEN);
-            canvas.drawRect(splat.get(i).x,splat.get(i).y,splat.get(i).x+50,splat.get(i).y+50, spot);
+            canvas.drawCircle(splat.get(i).x,splat.get(i).y,splatRadius, spot);
         }
         SpeedUpdate();
+    }
+
+    public boolean isSplatOverlapping(List<PaintSplat> splat, PaintSplat splat2){
+        isOverlapping = false;
+
+        for(PaintSplat mySplat:splat) {
+            double distance = sqrt(pow(splat2.x - mySplat.x, 2) + pow(splat2.y - mySplat.y,2));
+            if (mySplat == splat2 || distance < splatRadius*2-1) {
+                isOverlapping = true;
+            }
+        }
+        return isOverlapping;
     }
 
     public void SpeedUpdate(){
@@ -106,8 +123,9 @@ public class PaintCanvas extends View {
         }
     }
 
-    public boolean isOnBoard(float x2, float y2, float x, float y) {
-        return x2 > x && x2 < x + width && y2 > y && y2 < y + height;
+    public boolean isOnBoard(float xBoard, float yBoard, float xSplat, float ySplat) {
+        return xSplat-splatRadius > xBoard && xSplat + splatRadius < xBoard+width &&
+                ySplat-splatRadius > yBoard && ySplat + splatRadius < yBoard+height;
     }
     @Override
 
@@ -115,11 +133,13 @@ public class PaintCanvas extends View {
 
         if(!CoolDownActive) {
 
-            if (isOnBoard(event.getX(), event.getY(), x, y)) {
+            if (isOnBoard(x, y, event.getX(), event.getY())) {
                 CoolDownActive = true;
 
-                splat.add(new PaintSplat(event.getX(), event.getY()));
-                System.out.println(splat);
+                if(!isSplatOverlapping(splat, (new PaintSplat(event.getX(), event.getY())))) {
+                    splat.add(new PaintSplat(event.getX(), event.getY()));
+                    System.out.println(splat);
+                }
 
                 final Timer CoolDownTimer = new Timer();  //Starts game timer
                 CoolDownTimer.schedule(new TimerTask() {
