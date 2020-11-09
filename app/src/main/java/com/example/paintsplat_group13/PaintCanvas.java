@@ -41,12 +41,14 @@ public class PaintCanvas extends View {
     private int ScreenWidth;
     private Paint screen;
     private Paint spot;
+    private Paint txt;
     private splash sh;
     private boolean CoolDownActive;
     private List <PaintSplat>splat;
     private int previousSize;
     private boolean isOverlapping = false;
     private int splatRadius = 50;
+    private int score;
 
     public PaintCanvas(Context context) {
         super(context);
@@ -55,6 +57,9 @@ public class PaintCanvas extends View {
         screen.setColor(Color.GRAY);
         spot = new Paint();
         spot.setColor(GREEN);
+        txt= new Paint();
+        txt.setColor(Color.WHITE);
+        txt.setTextSize(30);
         x = y = 200;
         xVec = 2;   //Speed of change for x coordinate
         yVec = 2;  //Speed of change for y coordinate
@@ -72,6 +77,7 @@ public class PaintCanvas extends View {
         canvas.drawColor(Color.BLUE);
         super.onDraw(canvas);
         canvas.drawRect(x,y,x+width, y+height,screen);
+        canvas.drawText("Score:"+score,100,50,txt);
         for (int i=0; i<splat.size(); i++){
             canvas.drawCircle(splat.get(i).x,splat.get(i).y,splatRadius, spot);
         }
@@ -139,6 +145,8 @@ public class PaintCanvas extends View {
                 if(!isSplatOverlapping(splat, (new PaintSplat(event.getX(), event.getY())))) {
                     splat.add(new PaintSplat(event.getX(), event.getY()));
                     System.out.println(splat);
+                    score++;
+                    System.out.println("score:"+score);
                 }
 
                 final Timer CoolDownTimer = new Timer();  //Starts game timer
