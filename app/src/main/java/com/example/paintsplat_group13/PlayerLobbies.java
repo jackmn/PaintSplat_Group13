@@ -87,7 +87,7 @@ public class PlayerLobbies extends AppCompatActivity {
                 //join yhe room
                 button.setText("Create Room");
                 button.setEnabled(true);
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                Intent intent = new Intent(getApplicationContext(), gameScreen.class);
                 intent.putExtra("roomName", roomName);
                 startActivity(intent);
             }

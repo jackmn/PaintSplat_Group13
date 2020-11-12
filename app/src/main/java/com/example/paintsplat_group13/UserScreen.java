@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -16,9 +17,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 
 public class UserScreen extends AppCompatActivity {
-
 
     EditText editText;
     Button button;
@@ -28,13 +32,16 @@ public class UserScreen extends AppCompatActivity {
     FirebaseDatabase database;
     DatabaseReference playerRef;
 
+    Button enterButton;
+    EditText editUsername;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_screen);
 
-        editText = findViewById(R.id.edittext1);
-        button = findViewById(R.id.button1);
+        editText = findViewById(R.id.editUsername);
+        button = findViewById(R.id.playButton);
 
         database = FirebaseDatabase.getInstance();
         // Check if the player exists and get reference
@@ -86,5 +93,22 @@ public class UserScreen extends AppCompatActivity {
                 Toast.makeText(UserScreen.this, "Error!", Toast.LENGTH_SHORT).show();
             }
         });
+
+        editUsername = (EditText)findViewById(R.id.editUsername);
+        editUsername.getText().toString();
+
+        enterButton = (Button)findViewById(R.id.playButton);
+        enterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.v("text:", editUsername.getText().toString());
+                startHomeScreen();
+            }
+        });
+    }
+
+    public void startHomeScreen(){
+        Intent intent = new Intent(this, HomeScreen.class);
+        startActivity(intent);
     }
 }

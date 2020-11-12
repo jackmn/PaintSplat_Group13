@@ -19,7 +19,7 @@ import com.google.firebase.database.ValueEventListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class MainActivity extends AppCompatActivity {
+public class Firebase {
 
     Button button;
 
@@ -35,27 +35,15 @@ public class MainActivity extends AppCompatActivity {
     String player3 = "";
     String player4 = "";
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
+    public Firebase(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        setContentView(R.layout.activity_main);
 
-
-        button = findViewById(R.id.poke);
         //button.setEnabled(false);
-        database = FirebaseDatabase.getInstance();
-        SharedPreferences preferences = getSharedPreferences("PREFS", 0);
-        playerName = preferences.getString("playerName", "");
-        Bundle extras = getIntent().getExtras();
-        if (extras != null){
-            roomName = extras.getString("roomName");
-            if (roomName.equals(playerName)){
-                role = "host";
-            } else{
-                role = "guest";
-            }
-        }
+
+
+
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,31 +107,16 @@ public class MainActivity extends AppCompatActivity {
                 String oldPlayer2 = player2;
                 String oldPlayer3 = player3;
                 String oldPlayer4 = player4;
-//                if (player1 == "" || player1 == null) {
-//                    if (String.valueOf(dataSnapshot.child("player1").getValue()) != null) {
-                        player1 = String.valueOf(dataSnapshot.child("player1").getValue());
-                        Log.d("Player 1's name", player1);
-//                    }
-//                }
-//                if (player2 == "" || player2 == null) {
-//                    if (String.valueOf(dataSnapshot.child("player2").getValue()) != null) {
-                        player2 = String.valueOf(dataSnapshot.child("player2").getValue());
-                        Log.d("Player 2's name", player2);
-//                    }
-//                }
-//                if (player3 == "" || player3 == null) {
-//                    if (String.valueOf(dataSnapshot.child("player3").getValue()) != null) {
-//                        Log.d("SETTINGTONULLDIDNTWORK", player3);
-                        player3 = String.valueOf(dataSnapshot.child("player3").getValue());
-                        Log.d("Player 3's name", player3);
-//                    }
-//                }
-//                if (player4 == "" || player4 == null) {
-//                    if (String.valueOf(dataSnapshot.child("player4").getValue()) != null) {
-                        player4 = String.valueOf(dataSnapshot.child("player4").getValue());
-                        Log.d("Player 4's name", player4);
-//                    }
-//                }
+
+                player1 = String.valueOf(dataSnapshot.child("player1").getValue());
+                Log.d("Player 1's name", player1);
+                player2 = String.valueOf(dataSnapshot.child("player2").getValue());
+                Log.d("Player 2's name", player2);
+                player3 = String.valueOf(dataSnapshot.child("player3").getValue());
+                Log.d("Player 3's name", player3);
+                player4 = String.valueOf(dataSnapshot.child("player4").getValue());
+                Log.d("Player 4's name", player4);
+
                 if(!player1.equals(oldPlayer1) && !player1.equals(playerName) && !player1.equals(null)){
                     addRoomEventListener(player1);
                 }

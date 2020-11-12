@@ -6,7 +6,7 @@
     android:background="@drawable/untitled_1">
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/playButton"
         android:layout_width="218dp"
         android:layout_height="143dp"
         android:layout_alignParentStart="true"
@@ -21,7 +21,7 @@
         android:background="@android:color/transparent" />
 
     <EditText
-        android:id="@+id/edittext1"
+        android:id="@+id/editUsername"
         android:layout_width="222dp"
         android:layout_height="71dp"
         android:layout_alignParentStart="true"
@@ -30,12 +30,13 @@
         android:layout_alignParentRight="true"
         android:layout_marginStart="93dp"
         android:layout_marginLeft="93dp"
-        android:layout_marginTop="300dp"
+        android:layout_marginTop="383dp"
         android:layout_marginEnd="96dp"
-        android:layout_marginRight="99dp"
-        android:background="@android:color/transparent"
+        android:layout_marginRight="96dp"
+        android:background="@null"
+        android:gravity="center"
         android:hint="Add Username"
         android:textColor="@color/white"
-        android:textColorHint="@color/white" />
-
+        android:textColorHint="@color/white"
+        android:inputType="textNoSuggestions|textVisiblePassword"/>
 </RelativeLayout>
