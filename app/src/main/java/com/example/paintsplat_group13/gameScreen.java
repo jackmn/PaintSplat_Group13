@@ -83,23 +83,23 @@ public class gameScreen extends AppCompatActivity {
 
     private void addRoomEventListener(String nameOfPlayer){
 
-        (database.getReference("rooms/" + roomName + "/" + nameOfPlayer + "counter")).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String currentCounter = String.valueOf(dataSnapshot);
+//        (database.getReference("rooms/" + roomName)).addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                String currentCounter = String.valueOf(dataSnapshot);
 //                messageRef = database.getReference("rooms/" + roomName + "/" + playerName + "/moveX" + currentCounter);
-                Log.d("currentCounter", currentCounter);
+//                Log.d("currentCounter", currentCounter);
 //                Log.d("messageRef", String.valueOf(dataSnapshot.getValue()));
 
 
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                // error -retry
-                //messageRef.setValue(message);
-            }
-        });
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//                // error -retry
+//                //messageRef.setValue(message);
+//            }
+//        });
     }
 
     private void addPlayerNameListener(){
@@ -133,6 +133,7 @@ public class gameScreen extends AppCompatActivity {
                 if(!player4.equals(oldPlayer4) && !player4.equals(playerName) && !player4.equals(null)){
                     addRoomEventListener(player4);
                 }
+                Log.d("(dataSnapshot)", String.valueOf(dataSnapshot));
             }
 
             @Override
