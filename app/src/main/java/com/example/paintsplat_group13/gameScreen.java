@@ -34,6 +34,10 @@ public class gameScreen extends AppCompatActivity {
     String player2 = "";
     String player3 = "";
     String player4 = "";
+    String player1MoveNumber = "";
+    String player2MoveNumber = "";
+    String player3MoveNumber = "";
+    String player4MoveNumber = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,23 +121,36 @@ public class gameScreen extends AppCompatActivity {
                 player2 = String.valueOf(dataSnapshot.child("player2").getValue());
                 Log.d("Player 2's name", player2);
                 player3 = String.valueOf(dataSnapshot.child("player3").getValue());
-                Log.d("Player 3's name", player3);
+//                Log.d("Player 3's name", player3);
                 player4 = String.valueOf(dataSnapshot.child("player4").getValue());
-                Log.d("Player 4's name", player4);
+//                Log.d("Player 4's name", player4);
+                Log.d("Move Counter", String.valueOf(dataSnapshot.child(player1 + "counter").getValue()));
+                Log.d("player1MoveNumber 1", player1MoveNumber);
+                if(!player1.equals(oldPlayer1) && !player1.equals(playerName) && !player1.equals(null) && String.valueOf(dataSnapshot.child(player1 + "counter").getValue()) != player1MoveNumber){
+                    player1MoveNumber = String.valueOf(dataSnapshot.child(player1 + "counter").getValue());
+                    Log.d("player1MoveNumber 2", player1MoveNumber);
+                    String player1MoveX = String.valueOf(dataSnapshot.child(player1).child("moveX" + player1MoveNumber).getValue());
+                    String player1MoveY = String.valueOf(dataSnapshot.child(player1).child("moveY" + player1MoveNumber).getValue());
+                    Log.d("player1MoveX", player1MoveX);
+                    Log.d("player1MoveY", player1MoveY);
 
-                if(!player1.equals(oldPlayer1) && !player1.equals(playerName) && !player1.equals(null)){
-                    addRoomEventListener(player1);
                 }
-                if(!player2.equals(oldPlayer2) && !player2.equals(playerName) && !player2.equals(null)){
-                    addRoomEventListener(player2);
+                if(!player2.equals(oldPlayer2) && !player2.equals(playerName) && !player2.equals(null) && String.valueOf(dataSnapshot.child(player2 + "counter").getValue()) != player2MoveNumber){
+                    player2MoveNumber = String.valueOf(dataSnapshot.child(player2 + "counter").getValue());
+                    Log.d("player2MoveNumber", player2MoveNumber);
+                    String player2MoveX = String.valueOf(dataSnapshot.child(player2).child("moveX" + player2MoveNumber).getValue());
+                    String player2MoveY = String.valueOf(dataSnapshot.child(player2).child("moveY" + player2MoveNumber).getValue());
+                    Log.d("player2MoveX", player2MoveX);
+                    Log.d("player2MoveY", player2MoveY);
                 }
-                if(!player3.equals(oldPlayer3) && !player3.equals(playerName) && !player3.equals(null)){
-                    addRoomEventListener(player3);
+                if(!player3.equals(oldPlayer3) && !player3.equals(playerName) && !player3.equals(null) && String.valueOf(dataSnapshot.child(player3 + "counter")) != player3MoveNumber){
+                    player1MoveNumber = String.valueOf(dataSnapshot.child(player1 + "counter"));
+//                    addRoomEventListener(player3);
                 }
-                if(!player4.equals(oldPlayer4) && !player4.equals(playerName) && !player4.equals(null)){
-                    addRoomEventListener(player4);
+                if(!player4.equals(oldPlayer4) && !player4.equals(playerName) && !player4.equals(null) && String.valueOf(dataSnapshot.child(player4 + "counter")) != player4MoveNumber){
+                    player1MoveNumber = String.valueOf(dataSnapshot.child(player1 + "counter"));
+//                    addRoomEventListener(player4);
                 }
-                Log.d("(dataSnapshot)", String.valueOf(dataSnapshot));
             }
 
             @Override
