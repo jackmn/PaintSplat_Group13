@@ -160,8 +160,17 @@ public class PaintCanvas extends View {
         return true;
     }
 
-    public void addSplat(int X, int Y){
-        splat.add(new PaintSplat(X, Y));
+    public void setplayerSplat(int colour) {
+        spot.setColor(colour);
+    }
+
+
+    public void addSplat(int X, int Y, int colour){
+        Paint tempPaint = new Paint();
+        tempPaint.setColor(colour);
+        PaintSplat newSplat = new PaintSplat(X, Y);
+        splat.add(newSplat);
+        test_canvas.drawCircle(newSplat.x,newSplat.y,splatRadius, tempPaint);
     }
 
 

@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,17 +16,43 @@ import android.view.View;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Exclude;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.stream.StreamSupport;
+
+class boardMoves {
+
+    public int x,y;
+
+    public boardMoves() {}
+
+    public boardMoves(int _x, int _y) {
+        this.x = _x;
+        this.y = _y;
+    }
+
+    @Exclude
+    public Map<String, Object> toMap() {
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("x", x);
+        result.put("y", y);
+
+        return result;
+    }
+
+}
 
 public class gameScreen extends AppCompatActivity {
 
     private PaintCanvas paintCanvas;
     FirebaseDatabase database;
-    DatabaseReference messageRef;
     String playerName = "";
     String roomName= "";
     String role = "";
@@ -34,10 +61,7 @@ public class gameScreen extends AppCompatActivity {
     String player2 = "";
     String player3 = "";
     String player4 = "";
-    String player1MoveNumber = "";
-    String player2MoveNumber = "";
-    String player3MoveNumber = "";
-    String player4MoveNumber = "";
+    int playerCount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,82 +98,51 @@ public class gameScreen extends AppCompatActivity {
     }
 
     public void propagateMove(int X, int Y){
-        Log.d("Player name", playerName);
-        Log.d("roomName", roomName);
-        messageRef = database.getReference("rooms/" + roomName + "/" + playerName + "/moveX" + count);
-        messageRef.setValue(X);
-        messageRef = database.getReference("rooms/" + roomName + "/" + playerName + "/moveY" + count );
-        messageRef.setValue(Y);
-        messageRef = database.getReference("rooms/" + roomName + "/" + playerName + "counter");
-        messageRef.setValue(count);
-        count++;
+        boardMoves newMoves = new boardMoves(X, Y);
+        Map<String, Object> moveUpdates = new HashMap<>();
+        moveUpdates.put("rooms/" + roomName + "/" + playerName + "/moves/" + playerCount ,newMoves.toMap());
+        database.getReference().updateChildren(moveUpdates);
+        playerCount++;
     }
 
-    private void addRoomEventListener(String nameOfPlayer){
-
-//        (database.getReference("rooms/" + roomName)).addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                String currentCounter = String.valueOf(dataSnapshot);
-//                messageRef = database.getReference("rooms/" + roomName + "/" + playerName + "/moveX" + currentCounter);
-//                Log.d("currentCounter", currentCounter);
-//                Log.d("messageRef", String.valueOf(dataSnapshot.getValue()));
-
-
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//                // error -retry
-//                //messageRef.setValue(message);
-//            }
-//        });
+    private void addRoomEventListener(String nameOfPlayer, int color){
+        (database.getReference("rooms/" + roomName + "/" + nameOfPlayer +
+                "/moves")).addValueEventListener(new testListener(paintCanvas, color));
     }
 
     private void addPlayerNameListener(){
         database.getReference("rooms/" + roomName).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
                 String oldPlayer1 = player1;
                 String oldPlayer2 = player2;
                 String oldPlayer3 = player3;
                 String oldPlayer4 = player4;
 
                 player1 = String.valueOf(dataSnapshot.child("player1").getValue());
-                Log.d("Player 1's name", player1);
                 player2 = String.valueOf(dataSnapshot.child("player2").getValue());
-                Log.d("Player 2's name", player2);
                 player3 = String.valueOf(dataSnapshot.child("player3").getValue());
-//                Log.d("Player 3's name", player3);
                 player4 = String.valueOf(dataSnapshot.child("player4").getValue());
-//                Log.d("Player 4's name", player4);
-                Log.d("Move Counter", String.valueOf(dataSnapshot.child(player1 + "counter").getValue()));
-                Log.d("player1MoveNumber 1", player1MoveNumber);
-                if(!player1.equals(oldPlayer1) && !player1.equals(playerName) && !player1.equals(null) && String.valueOf(dataSnapshot.child(player1 + "counter").getValue()) != player1MoveNumber){
-                    player1MoveNumber = String.valueOf(dataSnapshot.child(player1 + "counter").getValue());
-                    Log.d("player1MoveNumber 2", player1MoveNumber);
-                    String player1MoveX = String.valueOf(dataSnapshot.child(player1).child("moveX" + player1MoveNumber).getValue());
-                    String player1MoveY = String.valueOf(dataSnapshot.child(player1).child("moveY" + player1MoveNumber).getValue());
-                    Log.d("player1MoveX", player1MoveX);
-                    Log.d("player1MoveY", player1MoveY);
 
+                String[] players = {player1, player2, player3, player4};
+                int[] playerColours = {Color.GREEN, Color.RED, Color.BLUE, Color.YELLOW};
+
+                for(int i = 0; i < players.length; i++) {
+                    if(players[i] == playerName) {
+                        setsplatColour(playerColours[i]);
+                    }
                 }
-                if(!player2.equals(oldPlayer2) && !player2.equals(playerName) && !player2.equals(null) && String.valueOf(dataSnapshot.child(player2 + "counter").getValue()) != player2MoveNumber){
-                    player2MoveNumber = String.valueOf(dataSnapshot.child(player2 + "counter").getValue());
-                    Log.d("player2MoveNumber", player2MoveNumber);
-                    String player2MoveX = String.valueOf(dataSnapshot.child(player2).child("moveX" + player2MoveNumber).getValue());
-                    String player2MoveY = String.valueOf(dataSnapshot.child(player2).child("moveY" + player2MoveNumber).getValue());
-                    Log.d("player2MoveX", player2MoveX);
-                    Log.d("player2MoveY", player2MoveY);
+                if(!player1.equals(oldPlayer1) && !player1.equals(playerName) && !player1.equals(null)){
+                    addRoomEventListener(player1, Color.GREEN);
                 }
-                if(!player3.equals(oldPlayer3) && !player3.equals(playerName) && !player3.equals(null) && String.valueOf(dataSnapshot.child(player3 + "counter")) != player3MoveNumber){
-                    player1MoveNumber = String.valueOf(dataSnapshot.child(player1 + "counter"));
-//                    addRoomEventListener(player3);
+                if(!player2.equals(oldPlayer2) && !player2.equals(playerName) && !player2.equals(null)){
+                    addRoomEventListener(player2, Color.RED);
                 }
-                if(!player4.equals(oldPlayer4) && !player4.equals(playerName) && !player4.equals(null) && String.valueOf(dataSnapshot.child(player4 + "counter")) != player4MoveNumber){
-                    player1MoveNumber = String.valueOf(dataSnapshot.child(player1 + "counter"));
-//                    addRoomEventListener(player4);
+                if(!player3.equals(oldPlayer3) && !player3.equals(playerName) && !player3.equals(null)){
+                    addRoomEventListener(player3, Color.BLUE);
+                }
+                if(!player4.equals(oldPlayer4) && !player4.equals(playerName) && !player4.equals(null)){
+                    addRoomEventListener(player3, Color.YELLOW);
                 }
             }
 
@@ -161,4 +154,36 @@ public class gameScreen extends AppCompatActivity {
         });
     }
 
+    public void setsplatColour(int colour) {
+        paintCanvas.setplayerSplat(colour);
+    }
+}
+
+class testListener implements ValueEventListener {
+
+    private PaintCanvas canvas;
+    private int playerColour;
+
+    public testListener(PaintCanvas _canvas, int _playerColour) {
+        this.canvas = _canvas;
+        this.playerColour = _playerColour;
+    }
+
+    @Override
+    public void onDataChange(@NonNull DataSnapshot snapshot) {
+        DataSnapshot lastchild = null;
+        for (DataSnapshot child: snapshot.getChildren()) {
+            lastchild = child;
+        }
+        if (lastchild != null){
+            String x = String.valueOf(lastchild.child("x").getValue());
+            String y = String.valueOf(lastchild.child("y").getValue());
+            canvas.addSplat(Integer. parseInt(x),Integer. parseInt(y),playerColour);
+        }
+    }
+
+    @Override
+    public void onCancelled(@NonNull DatabaseError error) {
+
+    }
 }
