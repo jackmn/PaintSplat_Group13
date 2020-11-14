@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -34,6 +35,7 @@ public class WaitingRoom extends AppCompatActivity {
 
     FirebaseDatabase database;
     DatabaseReference roomRef;
+    DatabaseReference GlobalGameStarted;
     DatabaseReference playerRef;
     boolean GameStarted = false;
 
@@ -48,28 +50,58 @@ public class WaitingRoom extends AppCompatActivity {
         SharedPreferences preferences = getSharedPreferences("PREFS", 0);
 //        playerName = preferences.getString("playerName", "");
         roomName = getIntent().getExtras().getString("roomName");
-
+        playerName = getIntent().getExtras().getString("playerName");
         listView = findViewById(R.id.listOfPlayers);
         button = findViewById(R.id.startGame);
         //all viable rooms
         playerList = new ArrayList<>();
+        GlobalGameStarted = database.getReference("rooms/" + roomName + "/gameRunning");
+        Log.d("playerName", playerName);
+        Log.d("roomName", roomName);
+        if(playerName.equals(roomName)){
 
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // create room and add yourself
-                button.setText("Starting Game");
-                button.setEnabled(false);
-                Intent intent = new Intent(getApplicationContext(), gameScreen.class);
-                intent.putExtra("roomName", roomName);
-                startActivity(intent);
-                GameStarted = true;
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // create room and add yourself
+
+//                    Log.d("playerName", playerName);
+                    button.setText("Starting Game");
+                    button.setEnabled(false);
+                    Intent intent = new Intent(getApplicationContext(), gameScreen.class);
+                    intent.putExtra("roomName", roomName);
+                    startActivity(intent);
+
+                    GlobalGameStarted.setValue(true);
+
 //                roomName = playerName;
 //                roomRef = database.getReference("rooms/" + roomName + "/player1");
 //                addRoomEventListener();
 //                roomRef.setValue(playerName);
-            }
-        });
+                }
+            });
+        }
+        else{
+            button.setVisibility(View.GONE);
+            GlobalGameStarted.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    Log.d("HEY", String.valueOf(snapshot.getValue()));
+                    if(String.valueOf(snapshot.getValue()) == "true") {
+
+                        Intent intent = new Intent(getApplicationContext(), gameScreen.class);
+                        intent.putExtra("roomName", roomName);
+                        startActivity(intent);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
+
 
 //        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 //            @Override

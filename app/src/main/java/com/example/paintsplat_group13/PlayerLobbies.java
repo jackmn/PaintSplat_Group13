@@ -112,6 +112,7 @@ public class PlayerLobbies extends AppCompatActivity {
                 button.setEnabled(true);
                 Intent intent = new Intent(getApplicationContext(), WaitingRoom.class);
                 intent.putExtra("roomName", roomName);
+                intent.putExtra("playerName", playerName);
                 startActivity(intent);
             }
 
