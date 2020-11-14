@@ -5,8 +5,12 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,10 +33,10 @@ class PaintSplat{
 
 public class PaintCanvas extends View {
 
-    private final int height = 700;
-    private final int width = 900;
+    private final int height = 600;
+    private final int width = 750;
     private final int boundary = 150;
-    private final Context context; // need for screen sizing
+    private Context gameContext; // need for screen sizing
     private int x, y;
     private int xVec, yVec;
     private int ScreenHeight;
@@ -43,13 +47,16 @@ public class PaintCanvas extends View {
     private List <PaintSplat>splat;
     private int previousSize;
     private boolean isOverlapping = false;
-    private int splatRadius = 50;
+    private int splatRadius = 35;
     private Bitmap bitmap;
     private Canvas test_canvas;
+    private final gameScreen gscreen;
 
     public PaintCanvas(Context context) {
         super(context);
-        this.context= context;
+        gameContext= context;
+        gscreen = (gameScreen)context;
+
         screen = new Paint();
         screen.setColor(Color.GRAY);
         spot = new Paint();
@@ -68,7 +75,6 @@ public class PaintCanvas extends View {
         test_canvas = new Canvas(bitmap);
         test_canvas.drawColor(Color.BLACK);
     }
-
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -93,8 +99,8 @@ public class PaintCanvas extends View {
         if(splat.size() % 3 == 0 && splat.size()!=previousSize){
             Random rand = new Random();
             previousSize = splat.size();
-            xVec = xVec * 2;
-            yVec = yVec * 2;
+            xVec = xVec + 3;
+            yVec = yVec + 3;
         }
     }
 
@@ -130,6 +136,7 @@ public class PaintCanvas extends View {
                 if(!isSplatOverlapping(splat, newSplat)) {
                     splat.add(newSplat);
                     test_canvas.drawCircle(newSplat.x,newSplat.y,splatRadius, spot);
+                    gscreen.propagateMove((int)(event.getX() - tempx), (int)(event.getY()-tempy));
                 }
                 final Timer CoolDownTimer = new Timer();  //Starts game timer
                 CoolDownTimer.schedule(new TimerTask() {
@@ -142,9 +149,23 @@ public class PaintCanvas extends View {
 
             }
         }
-
         return true;
     }
+
+    public void setplayerSplat(int colour) {
+        spot.setColor(colour);
+    }
+
+
+    public void addSplat(int X, int Y, int colour){
+        Paint tempPaint = new Paint();
+        tempPaint.setColor(colour);
+        PaintSplat newSplat = new PaintSplat(X, Y);
+        splat.add(newSplat);
+        test_canvas.drawCircle(newSplat.x,newSplat.y,splatRadius, tempPaint);
+    }
+
+
 }
 
 
