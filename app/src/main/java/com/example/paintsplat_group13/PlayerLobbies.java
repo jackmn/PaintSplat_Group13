@@ -76,6 +76,28 @@ public class PlayerLobbies extends AppCompatActivity {
                 roomRef.setValue(playerName);
             }
         });
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                // join an existing room
+                roomName = roomsList.get(position);
+                roomRef = database.getReference("rooms/" + roomName + "/player3");
+                addRoomEventListener();
+                roomRef.setValue(playerName);
+            }
+        });
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                // join an existing room
+                roomName = roomsList.get(position);
+                roomRef = database.getReference("rooms/" + roomName + "/player4");
+                addRoomEventListener();
+                roomRef.setValue(playerName);
+            }
+        });
         //show if new room is available
         addRoomsEventListener();
     }
