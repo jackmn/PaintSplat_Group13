@@ -13,6 +13,12 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +35,7 @@ public class WaitingRoom extends AppCompatActivity {
     FirebaseDatabase database;
     DatabaseReference roomRef;
     DatabaseReference playerRef;
+    boolean GameStarted = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +51,7 @@ public class WaitingRoom extends AppCompatActivity {
 
         listView = findViewById(R.id.listOfPlayers);
         button = findViewById(R.id.startGame);
-        //all vailable rooms
+        //all viable rooms
         playerList = new ArrayList<>();
 
         button.setOnClickListener(new View.OnClickListener() {
@@ -56,6 +63,7 @@ public class WaitingRoom extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), gameScreen.class);
                 intent.putExtra("roomName", roomName);
                 startActivity(intent);
+                GameStarted = true;
 //                roomName = playerName;
 //                roomRef = database.getReference("rooms/" + roomName + "/player1");
 //                addRoomEventListener();
@@ -128,14 +136,16 @@ public class WaitingRoom extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 //show list of rooms
-                playerList.clear();
-                Iterable<DataSnapshot> players = dataSnapshot.getChildren();
-                for (DataSnapshot snapshot : players){
-                    playerList.add(snapshot.getValue());
+                if(GameStarted == false) {
+                    playerList.clear();
+                    Iterable<DataSnapshot> players = dataSnapshot.getChildren();
+                    for (DataSnapshot snapshot : players) {
+                        playerList.add(String.valueOf(snapshot.getValue()));
 
-                    ArrayAdapter<String> adapter = new ArrayAdapter<>(WaitingRoom.this,
-                            android.R.layout.simple_list_item_1, playerList);
-                    listView.setAdapter(adapter);
+                        ArrayAdapter<String> adapter = new ArrayAdapter<>(WaitingRoom.this,
+                                android.R.layout.simple_list_item_1, playerList);
+                        listView.setAdapter(adapter);
+                    }
                 }
             }
 
