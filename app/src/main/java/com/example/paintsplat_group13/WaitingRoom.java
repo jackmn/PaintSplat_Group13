@@ -37,7 +37,7 @@ public class WaitingRoom extends AppCompatActivity {
     DatabaseReference roomRef;
     DatabaseReference GlobalGameStarted;
     DatabaseReference playerRef;
-    boolean GameStarted = false;
+    String GameStarted = "false";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +71,7 @@ public class WaitingRoom extends AppCompatActivity {
                     Intent intent = new Intent(getApplicationContext(), gameScreen.class);
                     intent.putExtra("roomName", roomName);
                     startActivity(intent);
-
+                    GameStarted = "true";
                     GlobalGameStarted.setValue(true);
 
 //                roomName = playerName;
@@ -88,13 +88,12 @@ public class WaitingRoom extends AppCompatActivity {
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     Log.d("HEY", String.valueOf(snapshot.getValue()));
                     if(String.valueOf(snapshot.getValue()) == "true") {
-
+                        GameStarted = "true";
                         Intent intent = new Intent(getApplicationContext(), gameScreen.class);
                         intent.putExtra("roomName", roomName);
                         startActivity(intent);
                     }
                 }
-
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
 
@@ -168,7 +167,7 @@ public class WaitingRoom extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 //show list of rooms
-                if(GameStarted == false) {
+                if(GameStarted.equals("false")) {
                     playerList.clear();
                     Iterable<DataSnapshot> players = dataSnapshot.getChildren();
                     for (DataSnapshot snapshot : players) {
