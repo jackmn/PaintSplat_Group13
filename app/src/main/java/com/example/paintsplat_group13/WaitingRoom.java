@@ -178,6 +178,11 @@ public class WaitingRoom extends AppCompatActivity {
                         listView.setAdapter(adapter);
                     }
                 }
+                Log.d("Trying to enter if", String.valueOf(dataSnapshot));
+                if(String.valueOf(dataSnapshot.child("gameRunning").getValue()).equals("false")){
+                    Intent intent = new Intent(getApplicationContext(), HomeScreen.class);
+                    startActivity(intent);
+                }
             }
 
             @Override
