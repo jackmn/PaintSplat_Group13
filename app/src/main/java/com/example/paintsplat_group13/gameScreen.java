@@ -142,7 +142,7 @@ public class gameScreen extends AppCompatActivity {
                     addRoomEventListener(player3, Color.BLUE);
                 }
                 if(!player4.equals(oldPlayer4) && !player4.equals(playerName) && !player4.equals(null)){
-                    addRoomEventListener(player3, Color.YELLOW);
+                    addRoomEventListener(player4, Color.YELLOW);
                 }
             }
 
