@@ -53,6 +53,7 @@ public class gameScreen extends AppCompatActivity {
 
     private PaintCanvas paintCanvas;
     FirebaseDatabase database;
+    DatabaseReference finishGame;
     String playerName = "";
     String roomName= "";
     String role = "";
@@ -73,6 +74,7 @@ public class gameScreen extends AppCompatActivity {
         paintCanvas = new PaintCanvas(this);
         setContentView(paintCanvas);
 
+
         Bundle extras = getIntent().getExtras();
 
         if (extras != null){
@@ -83,6 +85,17 @@ public class gameScreen extends AppCompatActivity {
                 role = "guest";
             }
         }
+        Log.d("roomName", roomName);
+        finishGame = database.getReference("rooms/" + roomName + "/gameRunning");
+        final Timer CoolDownTimer = new Timer();  //Starts game timer
+        CoolDownTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Log.d("finishGame", String.valueOf(finishGame));
+                finishGame.setValue(false);
+                Log.d("10 seconds have passed", roomName);
+            }
+        }, 10000);
         addPlayerNameListener();
         Log.d("roomName in onCreate", roomName);
         Timer t = new Timer();  //Starts game timer
