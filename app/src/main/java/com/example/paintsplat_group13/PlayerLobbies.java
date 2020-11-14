@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -71,33 +72,33 @@ public class PlayerLobbies extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 // join an existing room
                 roomName = roomsList.get(position);
-                roomRef = database.getReference("rooms/" + roomName + "/player2");
-                addRoomEventListener();
-                roomRef.setValue(playerName);
+                roomRef = database.getReference("rooms/" + roomName);
+
+                roomRef.addListenerForSingleValueEvent(new ValueEventListener() {
+
+                    @ Override
+                    public void onDataChange(DataSnapshot snap) {
+
+                        for(int i=2; i<5;i++) {
+                            DataSnapshot player = snap.child("player" + String.valueOf(i));
+
+                            if(player.getValue() == null) {
+                                DatabaseReference setRef = roomRef = database.getReference("rooms/" + roomName + "/player" + String.valueOf(i));
+                                addRoomEventListener();
+                                setRef.setValue(playerName);
+                                break;
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
             }
         });
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                // join an existing room
-                roomName = roomsList.get(position);
-                roomRef = database.getReference("rooms/" + roomName + "/player3");
-                addRoomEventListener();
-                roomRef.setValue(playerName);
-            }
-        });
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                // join an existing room
-                roomName = roomsList.get(position);
-                roomRef = database.getReference("rooms/" + roomName + "/player4");
-                addRoomEventListener();
-                roomRef.setValue(playerName);
-            }
-        });
         //show if new room is available
         addRoomsEventListener();
     }
