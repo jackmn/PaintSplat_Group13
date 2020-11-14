@@ -1,6 +1,6 @@
 package com.example.paintsplat_group13;
 
-import androidx.appcompat.app.AppCompatActivity;
+
 
 import android.graphics.Point;
 import android.os.Bundle;
@@ -8,6 +8,8 @@ import android.os.Handler;
 import android.view.Display;
 import android.view.WindowManager;
 import android.widget.ImageView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.Timer;
 import java.util.TimerTask;

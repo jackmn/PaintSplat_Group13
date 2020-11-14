@@ -1,12 +1,15 @@
 package com.example.paintsplat_group13;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.media.MediaPlayer;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.media.MediaPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +51,10 @@ public class PaintCanvas extends View {
     private int previousSize;
     private boolean isOverlapping = false;
     private int splatRadius = 50;
+    SharedPreferences sharedPreferences;
     private int score;
+    private int score1;
+    //final MediaPlayer spashsound;
 
     public PaintCanvas(Context context) {
         super(context);
@@ -67,6 +73,8 @@ public class PaintCanvas extends View {
         ScreenWidth= context.getResources().getDisplayMetrics().widthPixels;
         ScreenHeight = context.getResources().getDisplayMetrics().heightPixels;
         splat = new ArrayList<PaintSplat>();
+        sharedPreferences = context.getSharedPreferences("SHAR_PREF_NAME",Context.MODE_PRIVATE);
+        score = sharedPreferences.getInt("score1", 0);
     }
 
 
@@ -146,6 +154,9 @@ public class PaintCanvas extends View {
                     splat.add(new PaintSplat(event.getX(), event.getY()));
                     System.out.println(splat);
                     score++;
+                    SharedPreferences.Editor e = sharedPreferences.edit();
+                    e.putInt("score1",score);
+                    e.apply();
                     System.out.println("score:"+score);
                 }
 
@@ -162,7 +173,6 @@ public class PaintCanvas extends View {
         }
         return true;
     }
-
 }
 
 
