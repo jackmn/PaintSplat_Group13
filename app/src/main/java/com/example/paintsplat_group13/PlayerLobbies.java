@@ -76,7 +76,7 @@ public class PlayerLobbies extends AppCompatActivity {
 
                 roomRef.addListenerForSingleValueEvent(new ValueEventListener() {
 
-                    @ Override
+                    @Override
                     public void onDataChange(DataSnapshot snap) {
 
                         for(int i=2; i<5;i++) {
@@ -110,7 +110,7 @@ public class PlayerLobbies extends AppCompatActivity {
                 //join yhe room
                 button.setText("Create Room");
                 button.setEnabled(true);
-                Intent intent = new Intent(getApplicationContext(), gameScreen.class);
+                Intent intent = new Intent(getApplicationContext(), WaitingRoom.class);
                 intent.putExtra("roomName", roomName);
                 startActivity(intent);
             }
