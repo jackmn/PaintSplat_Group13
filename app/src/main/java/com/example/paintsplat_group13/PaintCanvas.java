@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -51,6 +52,10 @@ public class PaintCanvas extends View {
     private Bitmap bitmap;
     private Canvas test_canvas;
     private final gameScreen gscreen;
+
+    CharSequence HitText = "HIT!";
+    CharSequence MissText = "MISS!";
+    int ToastDuration = Toast.LENGTH_SHORT;
 
     public PaintCanvas(Context context) {
         super(context);
@@ -125,6 +130,10 @@ public class PaintCanvas extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event){
+
+        final Toast HitToast = Toast.makeText(gscreen, HitText, ToastDuration);
+        final Toast MissToast = Toast.makeText(gscreen, MissText, ToastDuration);
+
         if(!CoolDownActive) {
             // record x and y at time of entering function (may change during the func)
             int tempx = x;
@@ -134,20 +143,26 @@ public class PaintCanvas extends View {
                 CoolDownActive = true;
                 PaintSplat newSplat = new PaintSplat(event.getX() - tempx, event.getY()-tempy);
                 if(!isSplatOverlapping(splat, newSplat)) {
+                    HitToast.show();
                     splat.add(newSplat);
                     test_canvas.drawCircle(newSplat.x,newSplat.y,splatRadius, spot);
                     gscreen.propagateMove((int)(event.getX() - tempx), (int)(event.getY()-tempy));
                 }
-                final Timer CoolDownTimer = new Timer();  //Starts game timer
-                CoolDownTimer.schedule(new TimerTask() {
-
-                    @Override
-                    public void run() {
-                        CoolDownActive = false;
-                    }
-                }, 1000);
-
+                else{MissToast.show();}
             }
+            else{MissToast.show();}
+
+            final Timer CoolDownTimer = new Timer();  //Starts game timer
+            CoolDownTimer.schedule(new TimerTask() {
+
+                @Override
+                public void run() {
+                    CoolDownActive = false;
+                    HitToast.cancel();
+                    MissToast.cancel();
+                }
+            }, 750);
+
         }
         return true;
     }

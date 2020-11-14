@@ -14,12 +14,17 @@
 <!--        android:gravity="center_horizontal"-->
 <!--        ></TextView>-->
 
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar"></include>
+
     <ListView
         android:id="@+id/listOfLobbies"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_above="@+id/createRoomButton"
-        android:layout_alignParentTop="true"/>
+        android:layout_alignParentTop="true"
+        android:paddingTop="60dp" />
 
     <Button
         android:id="@+id/createRoomButton"

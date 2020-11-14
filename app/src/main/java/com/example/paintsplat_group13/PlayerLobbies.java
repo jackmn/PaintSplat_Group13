@@ -15,6 +15,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
+//import android.widget.Toolbar;
+import androidx.appcompat.widget.Toolbar;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -44,12 +46,14 @@ public class PlayerLobbies extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
 
-
 //        final Activity activity = this;
 //        this.requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 //        setContentView(R.layout.activity_player_lobbies);
 //        activity.setTitle("Available Lobbies");
         setContentView(R.layout.activity_player_lobbies);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Available Lobbies");
         database = FirebaseDatabase.getInstance();
 
         //get the player name and assign his room to thr player name
