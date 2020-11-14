@@ -33,8 +33,8 @@ class PaintSplat{
 
 public class PaintCanvas extends View {
 
-    private final int height = 700;
-    private final int width = 900;
+    private final int height = 600;
+    private final int width = 750;
     private final int boundary = 150;
     private Context gameContext; // need for screen sizing
     private int x, y;
@@ -47,16 +47,9 @@ public class PaintCanvas extends View {
     private List <PaintSplat>splat;
     private int previousSize;
     private boolean isOverlapping = false;
-    private int splatRadius = 50;
+    private int splatRadius = 35;
     private Bitmap bitmap;
     private Canvas test_canvas;
-
-//    FirebaseDatabase database;
-//    DatabaseReference messageRef;
-//    String roomName= "";
-//    String role = "";
-//    String playerName = "";
-//    int count = 0;
     private final gameScreen gscreen;
 
     public PaintCanvas(Context context) {
@@ -83,7 +76,6 @@ public class PaintCanvas extends View {
         test_canvas.drawColor(Color.BLACK);
     }
 
-
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -107,8 +99,8 @@ public class PaintCanvas extends View {
         if(splat.size() % 3 == 0 && splat.size()!=previousSize){
             Random rand = new Random();
             previousSize = splat.size();
-            xVec = xVec * 2;
-            yVec = yVec * 2;
+            xVec = xVec + 3;
+            yVec = yVec + 3;
         }
     }
 
