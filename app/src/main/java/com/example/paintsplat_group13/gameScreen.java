@@ -3,6 +3,7 @@ package com.example.paintsplat_group13;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -49,7 +50,7 @@ class boardMoves {
 
 }
 
-public class gameScreen extends AppCompatActivity {
+public class gameScreen<sharedPreferences> extends AppCompatActivity {
 
     private PaintCanvas paintCanvas;
     FirebaseDatabase database;
@@ -63,6 +64,9 @@ public class gameScreen extends AppCompatActivity {
     String player3 = "";
     String player4 = "";
     int playerCount = 0;
+    int scoreplayer = 0;
+    SharedPreferences sharedPreferences;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +91,7 @@ public class gameScreen extends AppCompatActivity {
         }
         Log.d("roomName", roomName);
         finishGame = database.getReference("rooms/" + roomName + "/gameRunning");
+
         final Timer CoolDownTimer = new Timer();  //Starts game timer
         CoolDownTimer.schedule(new TimerTask() {
             @Override
@@ -96,6 +101,8 @@ public class gameScreen extends AppCompatActivity {
                 Log.d("10 seconds have passed", roomName);
             }
         }, 10000);
+
+        scoreplayer = paintCanvas.getScore();
         addPlayerNameListener();
         Log.d("roomName in onCreate", roomName);
         Timer t = new Timer();  //Starts game timer
@@ -165,6 +172,14 @@ public class gameScreen extends AppCompatActivity {
                 //messageRef.setValue(message);
             }
         });
+    }
+
+    public String getPlayerName() {
+        return playerName;
+    }
+
+    public String getRoomName() {
+        return roomName;
     }
 
     public void setsplatColour(int colour) {

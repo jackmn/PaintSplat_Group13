@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
+import android.content.SharedPreferences;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -52,6 +53,10 @@ public class PaintCanvas extends View {
     private Bitmap bitmap;
     private Canvas test_canvas;
     private final gameScreen gscreen;
+    SharedPreferences sharedPreferences;
+    FirebaseDatabase database;
+    private int score;
+    private Paint txt;
 
     CharSequence HitText = "HIT!";
     CharSequence MissText = "MISS!";
@@ -70,9 +75,16 @@ public class PaintCanvas extends View {
         xVec = 2;   //Speed of change for x coordinate
         yVec = 2;  //Speed of change for y coordinate
         previousSize = 0;
+        txt= new Paint();
+        txt.setColor(Color.BLACK);
+        txt.setTextSize(30);
         ScreenWidth= context.getResources().getDisplayMetrics().widthPixels;
         ScreenHeight = context.getResources().getDisplayMetrics().heightPixels;
         splat = new ArrayList<PaintSplat>();
+        sharedPreferences = context.getSharedPreferences("SHAR_PREF_NAME",Context.MODE_PRIVATE);
+        score = sharedPreferences.getInt("score1", 0);
+        database = FirebaseDatabase.getInstance();
+
 
         //Set up board
         Bitmap.Config conf = Bitmap.Config.ARGB_8888;
@@ -86,6 +98,7 @@ public class PaintCanvas extends View {
         super.onDraw(canvas);
         canvas.drawBitmap(bitmap,x, y, new Paint());
         SpeedUpdate();
+        canvas.drawText("Score:"+score,100,50,txt);
     }
 
     public boolean isSplatOverlapping(List<PaintSplat> splat, PaintSplat splat2){
@@ -147,6 +160,12 @@ public class PaintCanvas extends View {
                     splat.add(newSplat);
                     test_canvas.drawCircle(newSplat.x,newSplat.y,splatRadius, spot);
                     gscreen.propagateMove((int)(event.getX() - tempx), (int)(event.getY()-tempy));
+                    SharedPreferences.Editor e = sharedPreferences.edit();
+                    score++;
+                    DatabaseReference addScore;
+                    addScore = database.getReference("rooms/" + gscreen.getRoomName() + "/" + gscreen.getPlayerName() + "Score" );
+                    e.putInt("score1",score);
+                    e.apply();
                 }
                 else{MissToast.show();}
             }
@@ -169,6 +188,10 @@ public class PaintCanvas extends View {
 
     public void setplayerSplat(int colour) {
         spot.setColor(colour);
+    }
+
+    public int getScore(){
+        return score;
     }
 
 
