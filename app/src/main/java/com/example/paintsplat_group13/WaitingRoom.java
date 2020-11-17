@@ -126,6 +126,7 @@ public class WaitingRoom extends AppCompatActivity {
                 Log.d("Trying to enter if", String.valueOf(dataSnapshot));
                 if(String.valueOf(dataSnapshot.child("gameRunning").getValue()).equals("false")){
                     Intent intent = new Intent(getApplicationContext(), ScoreBoard.class);
+                    intent.putExtra("roomName", roomName);
                     startActivity(intent);
                 }
             }

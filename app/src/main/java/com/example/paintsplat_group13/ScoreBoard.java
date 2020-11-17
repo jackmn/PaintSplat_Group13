@@ -52,6 +52,8 @@ public class ScoreBoard extends AppCompatActivity{
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Final ScoreBoard");
 
+        Bundle extras = getIntent().getExtras();
+        roomName = extras.getString("roomName");
         playerList = new ArrayList<>();
 
         SharedPreferences preferences = getSharedPreferences("PREFS", 0);
@@ -69,8 +71,10 @@ public class ScoreBoard extends AppCompatActivity{
                 playerList.clear();
                 Iterable<DataSnapshot> players = dataSnapshot.getChildren();
                 for (DataSnapshot snapshot : players) {
+                    System.out.println("snapshot " + String.valueOf(snapshot));
                     Iterable<DataSnapshot> iterablePlayers = snapshot.getChildren();
                     for(DataSnapshot childSnapshot : iterablePlayers) {
+                        System.out.println("childSnapshot " + String.valueOf(childSnapshot));
                         if (String.valueOf(childSnapshot.getKey()).contains("Score")) {
                             String temp = String.valueOf(childSnapshot.getKey()).split("Score")[0];
                             String playerScore = String.valueOf(((Number) childSnapshot.getValue()).intValue());
