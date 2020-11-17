@@ -6,7 +6,9 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -39,9 +41,13 @@ public class ScoreBoard extends AppCompatActivity{
     FirebaseDatabase database;
     DatabaseReference playerRef;
 
+    Button endButton;
+
     ListView listView;
 
     List<String> playerList;
+
+    int[] finalScores;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +65,15 @@ public class ScoreBoard extends AppCompatActivity{
         SharedPreferences preferences = getSharedPreferences("PREFS", 0);
         database = FirebaseDatabase.getInstance();
         addScoreListener();
+
+        endButton = (Button)findViewById(R.id.endGame);
+        endButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                removeRoomData();
+                startHomeScreen();
+            }
+        });
     }
 
     private void addScoreListener(){
@@ -96,5 +111,27 @@ public class ScoreBoard extends AppCompatActivity{
         });
     }
 
+    private void removeRoomData() {
 
+        playerRef = database.getReference("rooms/" + roomName);
+        playerRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                //show list of rooms
+                for(DataSnapshot snapshot: dataSnapshot.getChildren()){
+                    snapshot.getRef().removeValue();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                //nothing
+            }
+        });
+    }
+
+    public void startHomeScreen(){
+        Intent intent = new Intent(this, HomeScreen.class);
+        startActivity(intent);
+    }
 }
