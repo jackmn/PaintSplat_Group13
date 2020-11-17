@@ -6,12 +6,17 @@ android:layout_width="match_parent"
 android:layout_height="match_parent"
 tools:context=".WaitingRoom">
 
+<include
+    android:id="@+id/toolbar"
+    layout="@layout/toolbar"></include>
+
 <ListView
     android:id="@+id/listOfPlayers"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_above="@+id/startGame"
-    android:layout_alignParentTop="true"/>
+    android:layout_alignParentTop="true"
+    android:paddingTop="60dp"/>
 
 <Button
     android:id="@+id/startGame"

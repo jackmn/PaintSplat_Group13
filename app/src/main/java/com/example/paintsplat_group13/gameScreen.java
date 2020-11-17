@@ -3,6 +3,7 @@ package com.example.paintsplat_group13;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -49,7 +50,7 @@ class boardMoves {
 
 }
 
-public class gameScreen extends AppCompatActivity {
+public class gameScreen<sharedPreferences> extends AppCompatActivity {
 
     private PaintCanvas paintCanvas;
     FirebaseDatabase database;
@@ -57,12 +58,12 @@ public class gameScreen extends AppCompatActivity {
     String playerName = "";
     String roomName= "";
     String role = "";
-    int count = 0;
     String player1 = "";
     String player2 = "";
     String player3 = "";
     String player4 = "";
     int playerCount = 0;
+    int scoreplayer = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +88,7 @@ public class gameScreen extends AppCompatActivity {
         }
         Log.d("roomName", roomName);
         finishGame = database.getReference("rooms/" + roomName + "/gameRunning");
+
         final Timer CoolDownTimer = new Timer();  //Starts game timer
         CoolDownTimer.schedule(new TimerTask() {
             @Override
@@ -95,7 +97,9 @@ public class gameScreen extends AppCompatActivity {
                 finishGame.setValue(false);
                 Log.d("10 seconds have passed", roomName);
             }
-        }, 10000);
+        }, 30000);
+
+        scoreplayer = paintCanvas.getScore();
         addPlayerNameListener();
         Log.d("roomName in onCreate", roomName);
         Timer t = new Timer();  //Starts game timer
@@ -120,7 +124,7 @@ public class gameScreen extends AppCompatActivity {
 
     private void addRoomEventListener(String nameOfPlayer, int color){
         (database.getReference("rooms/" + roomName + "/" + nameOfPlayer +
-                "/moves")).addValueEventListener(new testListener(paintCanvas, color));
+                "/moves")).addValueEventListener(new CustomUpdateListener(paintCanvas, color));
     }
 
     private void addPlayerNameListener(){
@@ -167,17 +171,25 @@ public class gameScreen extends AppCompatActivity {
         });
     }
 
+    public String getPlayerName() {
+        return playerName;
+    }
+
+    public String getRoomName() {
+        return roomName;
+    }
+
     public void setsplatColour(int colour) {
         paintCanvas.setplayerSplat(colour);
     }
 }
 
-class testListener implements ValueEventListener {
+class CustomUpdateListener implements ValueEventListener {
 
     private PaintCanvas canvas;
     private int playerColour;
 
-    public testListener(PaintCanvas _canvas, int _playerColour) {
+    public CustomUpdateListener(PaintCanvas _canvas, int _playerColour) {
         this.canvas = _canvas;
         this.playerColour = _playerColour;
     }

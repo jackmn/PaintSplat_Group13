@@ -4,33 +4,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PlayerLobbies">
-
-<!--    <TextView-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="Available Lobbies"-->
-<!--        android:textStyle="bold"-->
-<!--        android:gravity="center_horizontal"-->
-<!--        ></TextView>-->
+    tools:context=".ScoreBoard">
 
     <include
         android:id="@+id/toolbar"
         layout="@layout/toolbar"></include>
 
     <ListView
-        android:id="@+id/listOfLobbies"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/createRoomButton"
+        android:id="@+id/listOfPlayerScores"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/startGame"
         android:layout_alignParentTop="true"
-        android:paddingTop="60dp" />
+        android:paddingTop="60dp"/>
 
     <Button
-        android:id="@+id/createRoomButton"
+        android:id="@+id/endGame"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:text="CREATE ROOM" />
+        android:text="END GAME" />
+
 </RelativeLayout>
