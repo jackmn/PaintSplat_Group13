@@ -138,6 +138,6 @@ public class ScoreBoard extends AppCompatActivity{
             public void run() {
                 startActivity(intent);
             }
-        }, 50);
+        }, 300);
     }
 }
