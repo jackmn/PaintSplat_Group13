@@ -72,6 +72,7 @@ public class WaitingRoom extends AppCompatActivity {
                 button.setEnabled(false);
                 Intent intent = new Intent(getApplicationContext(), gameScreen.class);
                 intent.putExtra("roomName", roomName);
+                intent.putExtra("playerName", playerName);
                 startActivity(intent);
                 GameStarted = "true";
                 GlobalGameStarted.setValue(true);
