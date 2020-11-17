@@ -1,0 +1,74 @@
+Index: app/src/main/java/com/example/paintsplat_group13/PaintCanvas.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.paintsplat_group13;\r\n\r\nimport android.content.Context;\r\nimport android.graphics.Bitmap;\r\nimport android.graphics.Canvas;\r\nimport android.graphics.Color;\r\nimport android.graphics.Paint;\r\nimport android.util.Log;\r\nimport android.view.MotionEvent;\r\nimport android.view.View;\r\n\r\nimport com.google.firebase.database.DatabaseReference;\r\nimport com.google.firebase.database.FirebaseDatabase;\r\n\r\nimport java.util.ArrayList;\r\nimport java.util.List;\r\nimport java.util.Random;\r\nimport java.util.Timer;\r\nimport java.util.TimerTask;\r\n\r\nimport static java.lang.Math.pow;\r\nimport static java.lang.Math.sqrt;\r\n\r\nclass PaintSplat{\r\n\r\n    public float x;\r\n    public float y;\r\n    public PaintSplat(float x_x, float y_y){\r\n        this.x = x_x;\r\n        this.y = y_y;\r\n    };\r\n}\r\n\r\npublic class PaintCanvas extends View {\r\n\r\n    private final int height = 700;\r\n    private final int width = 900;\r\n    private final int boundary = 150;\r\n    private Context gameContext; // need for screen sizing\r\n    private int x, y;\r\n    private int xVec, yVec;\r\n    private int ScreenHeight;\r\n    private int ScreenWidth;\r\n    private Paint screen;\r\n    private Paint spot;\r\n    private boolean CoolDownActive;\r\n    private List <PaintSplat>splat;\r\n    private int previousSize;\r\n    private boolean isOverlapping = false;\r\n    private int splatRadius = 50;\r\n    private Bitmap bitmap;\r\n    private Canvas test_canvas;\r\n\r\n//    FirebaseDatabase database;\r\n//    DatabaseReference messageRef;\r\n//    String roomName= \"\";\r\n//    String role = \"\";\r\n//    String playerName = \"\";\r\n//    int count = 0;\r\n    private final gameScreen gscreen;\r\n\r\n    public PaintCanvas(Context context) {\r\n        super(context);\r\n        gameContext= context;\r\n        gscreen = (gameScreen)context;\r\n\r\n        screen = new Paint();\r\n        screen.setColor(Color.GRAY);\r\n        spot = new Paint();\r\n        spot.setColor(Color.GREEN);\r\n        x = y = 200;\r\n        xVec = 2;   //Speed of change for x coordinate\r\n        yVec = 2;  //Speed of change for y coordinate\r\n        previousSize = 0;\r\n        ScreenWidth= context.getResources().getDisplayMetrics().widthPixels;\r\n        ScreenHeight = context.getResources().getDisplayMetrics().heightPixels;\r\n        splat = new ArrayList<PaintSplat>();\r\n\r\n        //Set up board\r\n        Bitmap.Config conf = Bitmap.Config.ARGB_8888;\r\n        bitmap = Bitmap.createBitmap(width, height, conf);\r\n        test_canvas = new Canvas(bitmap);\r\n        test_canvas.drawColor(Color.BLACK);\r\n    }\r\n\r\n\r\n    @Override\r\n    protected void onDraw(Canvas canvas) {\r\n        super.onDraw(canvas);\r\n        canvas.drawBitmap(bitmap,x, y, new Paint());\r\n        SpeedUpdate();\r\n    }\r\n\r\n    public boolean isSplatOverlapping(List<PaintSplat> splat, PaintSplat splat2){\r\n        isOverlapping = false;\r\n\r\n        for(PaintSplat mySplat:splat) {\r\n            double distance = sqrt(pow(splat2.x - mySplat.x, 2) + pow(splat2.y - mySplat.y,2));\r\n            if (mySplat == splat2 || distance < splatRadius*2-1) {\r\n                isOverlapping = true;\r\n            }\r\n        }\r\n        return isOverlapping;\r\n    }\r\n\r\n    public void SpeedUpdate(){\r\n        if(splat.size() % 3 == 0 && splat.size()!=previousSize){\r\n            Random rand = new Random();\r\n            previousSize = splat.size();\r\n            xVec = xVec * 2;\r\n            yVec = yVec * 2;\r\n        }\r\n    }\r\n\r\n    public void moveRect() {\r\n        //Checking screen width boundaries\r\n        if ((x + width) + boundary > ScreenWidth || x - boundary < 0) {\r\n            xVec = xVec*-1;\r\n        }\r\n        //Checking screen height boundaries\r\n        if ((y + height) + boundary > ScreenHeight || y - boundary < 0) {\r\n            yVec = yVec*-1;\r\n        }\r\n        //Setting new target position\r\n        x = x + xVec;\r\n        y = y + yVec;\r\n    }\r\n\r\n    public boolean isOnBoard(float xBoard, float yBoard, float xSplat, float ySplat) {\r\n        return xSplat - splatRadius > xBoard && xSplat + splatRadius < xBoard+width &&\r\n                ySplat - splatRadius > yBoard && ySplat + splatRadius < yBoard+height;\r\n    }\r\n\r\n    @Override\r\n    public boolean onTouchEvent(MotionEvent event){\r\n        if(!CoolDownActive) {\r\n            // record x and y at time of entering function (may change during the func)\r\n            int tempx = x;\r\n            int tempy = y;\r\n\r\n            if (isOnBoard(tempx, tempy, event.getX(), event.getY())) {\r\n                CoolDownActive = true;\r\n                PaintSplat newSplat = new PaintSplat(event.getX() - tempx, event.getY()-tempy);\r\n                if(!isSplatOverlapping(splat, newSplat)) {\r\n                    splat.add(newSplat);\r\n                    test_canvas.drawCircle(newSplat.x,newSplat.y,splatRadius, spot);\r\n                    gscreen.propagateMove((int)(event.getX() - tempx), (int)(event.getY()-tempy));\r\n                }\r\n                final Timer CoolDownTimer = new Timer();  //Starts game timer\r\n                CoolDownTimer.schedule(new TimerTask() {\r\n\r\n                    @Override\r\n                    public void run() {\r\n                        CoolDownActive = false;\r\n                    }\r\n                }, 1000);\r\n\r\n            }\r\n        }\r\n        return true;\r\n    }\r\n\r\n    public void setplayerSplat(int colour) {\r\n        spot.setColor(colour);\r\n    }\r\n\r\n\r\n    public void addSplat(int X, int Y, int colour){\r\n        Paint tempPaint = new Paint();\r\n        tempPaint.setColor(colour);\r\n        PaintSplat newSplat = new PaintSplat(X, Y);\r\n        splat.add(newSplat);\r\n        test_canvas.drawCircle(newSplat.x,newSplat.y,splatRadius, tempPaint);\r\n    }\r\n\r\n\r\n}\r\n\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/paintsplat_group13/PaintCanvas.java	(revision e7027e5698d5cd429487eefc2ba5922d7aa3f276)
++++ app/src/main/java/com/example/paintsplat_group13/PaintCanvas.java	(date 1605291274208)
+@@ -8,6 +8,7 @@
+ import android.util.Log;
+ import android.view.MotionEvent;
+ import android.view.View;
++import android.widget.Toast;
+ 
+ import com.google.firebase.database.DatabaseReference;
+ import com.google.firebase.database.FirebaseDatabase;
+@@ -51,6 +52,10 @@
+     private Bitmap bitmap;
+     private Canvas test_canvas;
+ 
++    CharSequence HitText = "HIT!";
++    CharSequence MissText = "MISS!";
++    int ToastDuration = Toast.LENGTH_SHORT;
++
+ //    FirebaseDatabase database;
+ //    DatabaseReference messageRef;
+ //    String roomName= "";
+@@ -133,6 +138,10 @@
+ 
+     @Override
+     public boolean onTouchEvent(MotionEvent event){
++
++        final Toast HitToast = Toast.makeText(gameContext, HitText, ToastDuration);
++        final Toast MissToast = Toast.makeText(gameContext, MissText, ToastDuration);
++
+         if(!CoolDownActive) {
+             // record x and y at time of entering function (may change during the func)
+             int tempx = x;
+@@ -142,20 +151,25 @@
+                 CoolDownActive = true;
+                 PaintSplat newSplat = new PaintSplat(event.getX() - tempx, event.getY()-tempy);
+                 if(!isSplatOverlapping(splat, newSplat)) {
++                    HitToast.show();
+                     splat.add(newSplat);
+                     test_canvas.drawCircle(newSplat.x,newSplat.y,splatRadius, spot);
+                     gscreen.propagateMove((int)(event.getX() - tempx), (int)(event.getY()-tempy));
+                 }
+-                final Timer CoolDownTimer = new Timer();  //Starts game timer
+-                CoolDownTimer.schedule(new TimerTask() {
++                else {MissToast.show();}
++            }
++            else {MissToast.show();}
++
++            final Timer CoolDownTimer = new Timer();  //Starts game timer
++            CoolDownTimer.schedule(new TimerTask() {
+ 
+-                    @Override
+-                    public void run() {
+-                        CoolDownActive = false;
+-                    }
+-                }, 1000);
+-
+-            }
++                @Override
++                public void run() {
++                    CoolDownActive = false;
++                    HitToast.cancel();
++                    MissToast.cancel();
++                }
++            }, 750);
+         }
+         return true;
+     }

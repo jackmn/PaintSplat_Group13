@@ -91,7 +91,11 @@ public class WaitingRoom extends AppCompatActivity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     Log.d("HEY", String.valueOf(snapshot.getValue()));
-                    if(String.valueOf(snapshot.getValue()) == "true") {
+                    if (GameStarted == "true" && String.valueOf(snapshot.getValue()).equals("false")){
+                        Intent intent = new Intent(getApplicationContext(), ScoreBoard.class);
+                        startActivity(intent);
+                    }
+                    if (String.valueOf(snapshot.getValue()) == "true") {
                         GameStarted = "true";
                         Intent intent = new Intent(getApplicationContext(), gameScreen.class);
                         intent.putExtra("roomName", roomName);
@@ -105,64 +109,8 @@ public class WaitingRoom extends AppCompatActivity {
             });
         }
 
-
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-//                // join an existing room
-//                roomName = roomsList.get(position);
-//                roomRef = database.getReference("rooms/" + roomName);
-//
-//                roomRef.addListenerForSingleValueEvent(new ValueEventListener() {
-//
-//                    @Override
-//                    public void onDataChange(DataSnapshot snap) {
-//
-//                        for(int i=2; i<5;i++) {
-//                            DataSnapshot player = snap.child("player" + String.valueOf(i));
-//
-//                            if(player.getValue() == null) {
-//                                DatabaseReference setRef = roomRef = database.getReference("rooms/" + roomName + "/player" + String.valueOf(i));
-//                                addRoomEventListener();
-//                                setRef.setValue(playerName);
-//                                break;
-//                            }
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError error) {
-//
-//                    }
-//                });
-//            }
-//        });
-
-        //show if new room is available
         addPlayersEventListener();
     }
-
-//    private void addPlayersEventListener(){
-//        roomRef.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                //join yhe room
-//                button.setText("Create Room");
-//                button.setEnabled(true);
-//                Intent intent = new Intent(getApplicationContext(), gameScreen.class);
-//                intent.putExtra("roomName", roomName);
-//                startActivity(intent);
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//                // error
-//                button.setText("Create Room");
-//                button.setEnabled(true);
-//                Toast.makeText(PlayerLobbies.this, "Error!", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//    }
 
     private void addPlayersEventListener(){
 //        roomsRef = database.getReference("rooms");
@@ -184,7 +132,7 @@ public class WaitingRoom extends AppCompatActivity {
                 }
                 Log.d("Trying to enter if", String.valueOf(dataSnapshot));
                 if(String.valueOf(dataSnapshot.child("gameRunning").getValue()).equals("false")){
-                    Intent intent = new Intent(getApplicationContext(), HomeScreen.class);
+                    Intent intent = new Intent(getApplicationContext(), ScoreBoard.class);
                     startActivity(intent);
                 }
             }
