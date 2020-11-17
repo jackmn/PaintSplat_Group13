@@ -19,6 +19,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -38,8 +40,10 @@ class Player{
 public class ScoreBoard extends AppCompatActivity{
 
     String roomName = "";
+    String playerName = "";
     FirebaseDatabase database;
     DatabaseReference playerRef;
+    DatabaseReference roomRef;
 
     Button endButton;
 
@@ -60,6 +64,7 @@ public class ScoreBoard extends AppCompatActivity{
 
         Bundle extras = getIntent().getExtras();
         roomName = extras.getString("roomName");
+        playerName = extras.getString("playerName");
         playerList = new ArrayList<>();
 
         SharedPreferences preferences = getSharedPreferences("PREFS", 0);
@@ -113,12 +118,12 @@ public class ScoreBoard extends AppCompatActivity{
 
     private void removeRoomData() {
 
-        playerRef = database.getReference("rooms/" + roomName);
-        playerRef.addValueEventListener(new ValueEventListener() {
+        roomRef = database.getReference("rooms/" + roomName);
+        roomRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 //show list of rooms
-                for(DataSnapshot snapshot: dataSnapshot.getChildren()){
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     snapshot.getRef().removeValue();
                 }
             }
@@ -131,7 +136,13 @@ public class ScoreBoard extends AppCompatActivity{
     }
 
     public void startHomeScreen(){
-        Intent intent = new Intent(this, HomeScreen.class);
-        startActivity(intent);
+        final Timer CoolDownTimer = new Timer();  //Starts game timer
+        final Intent intent = new Intent(this, HomeScreen.class);
+        CoolDownTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                startActivity(intent);
+            }
+        }, 500);
     }
 }
