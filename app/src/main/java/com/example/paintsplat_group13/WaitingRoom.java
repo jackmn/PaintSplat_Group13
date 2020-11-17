@@ -52,7 +52,6 @@ public class WaitingRoom extends AppCompatActivity {
 
         //get the player name and assign his room to thr player name
         SharedPreferences preferences = getSharedPreferences("PREFS", 0);
-//        playerName = preferences.getString("playerName", "");
         roomName = getIntent().getExtras().getString("roomName");
         playerName = getIntent().getExtras().getString("playerName");
         listView = findViewById(R.id.listOfPlayers);
@@ -67,21 +66,15 @@ public class WaitingRoom extends AppCompatActivity {
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    // create room and add yourself
+                // create room and add yourself
 
-//                    Log.d("playerName", playerName);
-                    button.setText("Starting Game");
-                    button.setEnabled(false);
-                    Intent intent = new Intent(getApplicationContext(), gameScreen.class);
-                    intent.putExtra("roomName", roomName);
-                    startActivity(intent);
-                    GameStarted = "true";
-                    GlobalGameStarted.setValue(true);
-
-//                roomName = playerName;
-//                roomRef = database.getReference("rooms/" + roomName + "/player1");
-//                addRoomEventListener();
-//                roomRef.setValue(playerName);
+                button.setText("Starting Game");
+                button.setEnabled(false);
+                Intent intent = new Intent(getApplicationContext(), gameScreen.class);
+                intent.putExtra("roomName", roomName);
+                startActivity(intent);
+                GameStarted = "true";
+                GlobalGameStarted.setValue(true);
                 }
             });
         }

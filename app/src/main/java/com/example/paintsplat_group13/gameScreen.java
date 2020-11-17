@@ -58,14 +58,12 @@ public class gameScreen<sharedPreferences> extends AppCompatActivity {
     String playerName = "";
     String roomName= "";
     String role = "";
-    int count = 0;
     String player1 = "";
     String player2 = "";
     String player3 = "";
     String player4 = "";
     int playerCount = 0;
     int scoreplayer = 0;
-    SharedPreferences sharedPreferences;
 
 
     @Override
@@ -100,7 +98,7 @@ public class gameScreen<sharedPreferences> extends AppCompatActivity {
                 finishGame.setValue(false);
                 Log.d("10 seconds have passed", roomName);
             }
-        }, 10000);
+        }, 30000);
 
         scoreplayer = paintCanvas.getScore();
         addPlayerNameListener();
@@ -127,7 +125,7 @@ public class gameScreen<sharedPreferences> extends AppCompatActivity {
 
     private void addRoomEventListener(String nameOfPlayer, int color){
         (database.getReference("rooms/" + roomName + "/" + nameOfPlayer +
-                "/moves")).addValueEventListener(new testListener(paintCanvas, color));
+                "/moves")).addValueEventListener(new CustomUpdateListener(paintCanvas, color));
     }
 
     private void addPlayerNameListener(){
@@ -174,8 +172,6 @@ public class gameScreen<sharedPreferences> extends AppCompatActivity {
         });
     }
 
-
-
     public String getPlayerName() {
         return playerName;
     }
@@ -189,12 +185,12 @@ public class gameScreen<sharedPreferences> extends AppCompatActivity {
     }
 }
 
-class testListener implements ValueEventListener {
+class CustomUpdateListener implements ValueEventListener {
 
     private PaintCanvas canvas;
     private int playerColour;
 
-    public testListener(PaintCanvas _canvas, int _playerColour) {
+    public CustomUpdateListener(PaintCanvas _canvas, int _playerColour) {
         this.canvas = _canvas;
         this.playerColour = _playerColour;
     }

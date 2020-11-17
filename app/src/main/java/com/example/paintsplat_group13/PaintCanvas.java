@@ -37,7 +37,7 @@ public class PaintCanvas extends View {
 
     private final int height = 600;
     private final int width = 750;
-    private final int boundary = 150;
+    private final int boundary = 75;
     private Context gameContext; // need for screen sizing
     private int x, y;
     private int xVec, yVec;

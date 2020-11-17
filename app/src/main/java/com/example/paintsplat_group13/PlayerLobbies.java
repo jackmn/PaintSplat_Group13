@@ -43,13 +43,7 @@ public class PlayerLobbies extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
-
-//        final Activity activity = this;
-//        this.requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
-//        setContentView(R.layout.activity_player_lobbies);
-//        activity.setTitle("Available Lobbies");
         setContentView(R.layout.activity_player_lobbies);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

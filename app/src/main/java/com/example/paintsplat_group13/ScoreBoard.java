@@ -35,7 +35,6 @@ class Player{
 
 public class ScoreBoard extends AppCompatActivity{
 
-    String playerName = "";
     String roomName = "";
     FirebaseDatabase database;
     DatabaseReference playerRef;
@@ -43,9 +42,6 @@ public class ScoreBoard extends AppCompatActivity{
     ListView listView;
 
     List<String> playerList;
-    //List<String> playerList;
-
-    int[] finalScores;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,8 +57,6 @@ public class ScoreBoard extends AppCompatActivity{
         SharedPreferences preferences = getSharedPreferences("PREFS", 0);
         database = FirebaseDatabase.getInstance();
         addScoreListener();
-        DatabaseReference dummyRef = database.getReference("rooms/" + roomName + "/dummy");
-        dummyRef.setValue(true);
     }
 
     private void addScoreListener(){
@@ -79,11 +73,9 @@ public class ScoreBoard extends AppCompatActivity{
                     for(DataSnapshot childSnapshot : iterablePlayers) {
                         if (String.valueOf(childSnapshot.getKey()).contains("Score")) {
                             String temp = String.valueOf(childSnapshot.getKey()).split("Score")[0];
-                            //int scorePlayer = ((Number) childSnapshot.getValue()).intValue();
                             String playerScore = String.valueOf(((Number) childSnapshot.getValue()).intValue());
                             String playerDetails = "Username:  " + temp + "     Score:  " + playerScore;
                             playerList.add(playerDetails);
-                            //System.out.println(childSnapshot);
                         }
                     }
                 }
