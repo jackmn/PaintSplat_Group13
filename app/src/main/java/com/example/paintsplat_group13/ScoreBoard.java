@@ -71,16 +71,11 @@ public class ScoreBoard extends AppCompatActivity{
                 playerList.clear();
                 Iterable<DataSnapshot> players = dataSnapshot.getChildren();
                 for (DataSnapshot snapshot : players) {
-                    System.out.println("snapshot " + String.valueOf(snapshot));
-                    Iterable<DataSnapshot> iterablePlayers = snapshot.getChildren();
-                    for(DataSnapshot childSnapshot : iterablePlayers) {
-                        System.out.println("childSnapshot " + String.valueOf(childSnapshot));
-                        if (String.valueOf(childSnapshot.getKey()).contains("Score")) {
-                            String temp = String.valueOf(childSnapshot.getKey()).split("Score")[0];
-                            String playerScore = String.valueOf(((Number) childSnapshot.getValue()).intValue());
-                            String playerDetails = "Username:  " + temp + "     Score:  " + playerScore;
-                            playerList.add(playerDetails);
-                        }
+                    if (String.valueOf(snapshot.getKey()).contains("Score")) {
+                        String temp = String.valueOf(snapshot.getKey()).split("Score")[0];
+                        String playerScore = String.valueOf(((Number) snapshot.getValue()).intValue());
+                        String playerDetails = "Username:  " + temp + "     Score:  " + playerScore;
+                        playerList.add(playerDetails);
                     }
                 }
 
