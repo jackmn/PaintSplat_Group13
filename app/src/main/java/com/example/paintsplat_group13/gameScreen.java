@@ -65,7 +65,6 @@ public class gameScreen<sharedPreferences> extends AppCompatActivity {
     int playerCount = 0;
     int scoreplayer = 0;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

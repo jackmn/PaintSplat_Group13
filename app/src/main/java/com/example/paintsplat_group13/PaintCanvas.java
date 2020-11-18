@@ -77,7 +77,7 @@ public class PaintCanvas extends View {
         previousSize = 0;
         txt= new Paint();
         txt.setColor(Color.BLACK);
-        txt.setTextSize(30);
+        txt.setTextSize(60);
         ScreenWidth= context.getResources().getDisplayMetrics().widthPixels;
         ScreenHeight = context.getResources().getDisplayMetrics().heightPixels;
         splat = new ArrayList<PaintSplat>();
@@ -98,7 +98,7 @@ public class PaintCanvas extends View {
         super.onDraw(canvas);
         canvas.drawBitmap(bitmap,x, y, new Paint());
         SpeedUpdate();
-        canvas.drawText("My Score:"+score,100,50,txt);
+        canvas.drawText("My Score:"+score,50,60,txt);
     }
 
     public boolean isSplatOverlapping(List<PaintSplat> splat, PaintSplat splat2){
