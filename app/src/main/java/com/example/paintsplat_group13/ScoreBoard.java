@@ -114,7 +114,7 @@ public class ScoreBoard extends AppCompatActivity{
     private void removeRoomData() {
 
         roomRef = database.getReference("rooms/" + roomName);
-        roomRef.addValueEventListener(new ValueEventListener() {
+        roomRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 //show list of rooms
@@ -138,6 +138,6 @@ public class ScoreBoard extends AppCompatActivity{
             public void run() {
                 startActivity(intent);
             }
-        }, 500);
+        }, 50);
     }
 }

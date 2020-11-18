@@ -58,7 +58,9 @@ public class WaitingRoom extends AppCompatActivity {
         button = findViewById(R.id.startGame);
         //all viable rooms
         playerList = new ArrayList<>();
-        GlobalGameStarted = database.getReference("rooms/" + roomName + "/gameRunning");
+        if (!roomName.equals("")) {
+            GlobalGameStarted = database.getReference("rooms/" + roomName + "/gameRunning");
+        }
         Log.d("playerName", playerName);
         Log.d("roomName", roomName);
         if(playerName.equals(roomName)){
